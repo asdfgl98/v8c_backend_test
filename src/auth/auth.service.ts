@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -51,6 +51,38 @@ export class AuthService {
             accessToken : this.generationToken(id, false),
             refreshToken : this.generationToken(id, true)
         }
+    }
+
+    verifyToken(token: string, isRefreshToken: boolean){
+        try{
+            const payload = this.jwtService.verify(token, {
+                secret: this.configService.get('JWT_SECRET')
+            })
+            return payload
+        } catch(err){
+            if(err.message === "jwt expired"){
+                if(isRefreshToken){
+                    throw new BadRequestException('리프레시 토큰이 만료되었습니다.')
+                }
+                throw new BadRequestException('엑세스 토큰이 만료되었습니다.')
+            }
+
+            console.error('토큰 검증 에러', err)
+            throw new BadRequestException('토큰 검증 중 에러가 발생하였습니다.')
+        }
+    }
+
+    async rotateToken(token: string, isRefreshToken: boolean){
+        const verify = await this.verifyToken(token, isRefreshToken)
+        if(verify.type !== 'refresh'){
+            throw new BadRequestException('토큰 재발급은 Refresh Token으로만 가능합니다.')
+        }
+
+        return this.generationToken(
+            verify.id,
+            isRefreshToken
+        )
+        
     }
 
 

@@ -22,4 +22,10 @@ export class AuthController {
     return this.authService.userLogin(validateUser.userId)
   }
 
+  @Post('rotate')
+  async rotate(@Body() req:any){
+    const result = await this.authService.rotateToken(req.token, false)
+
+    return result
+  }
 }
