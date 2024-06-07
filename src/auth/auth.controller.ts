@@ -1,6 +1,7 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { BearerTokenGuard } from 'src/guard/bearer-token.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -24,8 +25,14 @@ export class AuthController {
 
   @Post('rotate')
   async rotate(@Body() req:any){
-    const result = await this.authService.rotateToken(req.token, false)
+    const result = await this.authService.refreshAccessToken(req.token, false)
 
     return result
+  }
+
+  @Post('test')
+  @UseGuards(BearerTokenGuard)
+  async test(){
+    
   }
 }

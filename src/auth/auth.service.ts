@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -72,7 +72,17 @@ export class AuthService {
         }
     }
 
-    async rotateToken(token: string, isRefreshToken: boolean){
+    extractTokenFromHeader(header: string, isBearer: boolean){
+        const splitToken = header.split(" ")
+        const prefix = isBearer ? 'Bearer' : 'Basic'
+        if(splitToken.length !== 2 || splitToken[0] !== prefix){
+            throw new UnauthorizedException("잘못된 토큰입니다.")
+        }
+
+        return splitToken[1]
+    }
+
+    async refreshAccessToken(token: string, isRefreshToken: boolean){
         const verify = await this.verifyToken(token, isRefreshToken)
         if(verify.type !== 'refresh'){
             throw new BadRequestException('토큰 재발급은 Refresh Token으로만 가능합니다.')
