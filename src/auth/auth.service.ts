@@ -1,16 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs'
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly usersService: UsersService,
+        @InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>
     ){}
 
-    join(userData: any){
+    async join(userData: CreateUserDto){
+        const joinResult = await this.usersService.join(userData)
+        
+        return this.userLogin(joinResult.userId)
+    }
 
+    async validateUser(userId: string, password: string){
+        const user = await this.usersService.findOne(userId)
+
+        if(user && await bcrypt.compare(password, user.password)){
+            const {password, ...result} = user
+            return result
+        }
+
+        return false
     }
 
     generationToken(id: string, isRefreshToken: boolean){

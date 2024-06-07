@@ -2,15 +2,15 @@ import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({name : 'TB_USER'})
 export class UserEntity {
-    @PrimaryColumn()
-    id: string
+    @PrimaryColumn({ name : 'userId'})
+    userId: string
 
-    @Column()
+    @Column({ name: 'password'})
     password: string
 
-    @Column()
+    @Column({ name: 'name'})
     name: string
 
-    @CreateDateColumn()
+    @CreateDateColumn({ name: 'createdAt'})
     createdAt: Date
 }
