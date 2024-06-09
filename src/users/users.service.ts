@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException } from '@
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs'
 import { ConfigService } from '@nestjs/config';
@@ -11,8 +11,8 @@ import { ConfigService } from '@nestjs/config';
 export class UsersService {
   constructor(
     private readonly configService: ConfigService,
-    @InjectRepository(UserEntity)
-    private usersRepository: Repository<UserEntity>
+    @InjectRepository(User)
+    private usersRepository: Repository<User>
   ){}
 
   async findOne(userId: string){

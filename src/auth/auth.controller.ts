@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { AccessTokenGuard, BearerTokenGuard } from 'src/guard/bearer-token.guard';
+import { AccessTokenGuard, BearerTokenGuard, RefreshTokenGuard } from 'src/guard/bearer-token.guard';
 import { Roles } from 'src/users/decorator/roles.decorator';
 import { RolesGuard } from 'src/users/guard/roles.guard';
 
@@ -24,8 +24,9 @@ export class AuthController {
     return this.authService.userLogin(validateUser)
   }
 
-  @Post('rotate')
-  async rotate(@Body() req:any){
+  @Post('refresh')
+  @UseGuards(RefreshTokenGuard)
+  async refresh(@Body() req:any){
     const result = await this.authService.refreshAccessToken(req.token, false)
 
     return result

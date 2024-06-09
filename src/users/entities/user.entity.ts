@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({name : 'TB_USER'})
-export class UserEntity {
+export class User {
     @PrimaryColumn({ name : 'userId'})
     userId: string
 
