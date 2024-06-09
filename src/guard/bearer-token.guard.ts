@@ -18,7 +18,36 @@ export class BearerTokenGuard implements CanActivate {
 
         const verify = this.authService.verifyToken(token, false)
 
-        req.userId = verify.userId
+        req.user = verify
+
+        return true
+    }
+}
+
+@Injectable()
+export class AccessTokenGuard extends BearerTokenGuard {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        await super.canActivate(context)
+
+        const req = context.switchToHttp().getRequest()
+        if(req.user.type !== 'access') {
+            throw new UnauthorizedException("access 토큰이 아닙니다.")
+        }
+
+        return true
+    }
+}
+
+@Injectable()
+export class RefreshTokenGuard extends BearerTokenGuard {
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        await super.canActivate(context)
+
+        const req = context.switchToHttp().getRequest()
+
+        if(req.user.type !== 'refresh'){
+            throw new UnauthorizedException("refresh 토큰이 아닙니다.")
+        }
 
         return true
     }

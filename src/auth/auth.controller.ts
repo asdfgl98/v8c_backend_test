@@ -1,7 +1,9 @@
-import { BadRequestException, Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { BearerTokenGuard } from 'src/guard/bearer-token.guard';
+import { AccessTokenGuard, BearerTokenGuard } from 'src/guard/bearer-token.guard';
+import { Roles } from 'src/users/decorator/roles.decorator';
+import { RolesGuard } from 'src/users/guard/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,8 +21,7 @@ export class AuthController {
     if(!validateUser){
       throw new BadRequestException('아이디 또는 비밀번호가 일치하지않습니다.')      
     }
-
-    return this.authService.userLogin(validateUser.userId)
+    return this.authService.userLogin(validateUser)
   }
 
   @Post('rotate')
@@ -31,8 +32,9 @@ export class AuthController {
   }
 
   @Post('test')
-  @UseGuards(BearerTokenGuard)
-  async test(){
-    
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  @Roles('admin')
+  async test(@Request() req:any){
+    console.log(req.user)
   }
 }

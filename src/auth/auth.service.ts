@@ -34,9 +34,10 @@ export class AuthService {
         return false
     }
 
-    generationToken(id: string, isRefreshToken: boolean){
+    generationToken(user: any, isRefreshToken: boolean){
         const payload = {
-            sub : id,
+            sub : user.userId,
+            role : user.role,
             type : isRefreshToken ? 'refresh' : 'access'
         }
 
@@ -46,10 +47,10 @@ export class AuthService {
         })
     }
 
-    userLogin(id: string){
+    userLogin(user: any){
         return {
-            accessToken : this.generationToken(id, false),
-            refreshToken : this.generationToken(id, true)
+            accessToken : this.generationToken(user, false),
+            refreshToken : this.generationToken(user, true)
         }
     }
 

@@ -13,4 +13,7 @@ export class UserEntity {
 
     @CreateDateColumn({ name: 'createdAt'})
     createdAt: Date
+
+    @Column({ name: 'role', default: 'user'})
+    role: string
 }
