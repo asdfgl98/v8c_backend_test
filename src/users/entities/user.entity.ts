@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import { Post } from "src/post/entities/post.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity({name : 'TB_USER'})
 export class User {
@@ -16,4 +17,7 @@ export class User {
 
     @Column({ name: 'role', default: 'user'})
     role: string
+
+    @OneToMany(()=> Post, (post)=> post.author)
+    posts: Post[]
 }
