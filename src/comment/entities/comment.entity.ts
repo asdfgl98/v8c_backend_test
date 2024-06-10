@@ -14,18 +14,12 @@ export class Comment {
     @JoinColumn({name: 'userId'})
     user: User
 
-    @Column()
-    userId: string;
-
-    @ManyToOne(()=> Post, (post)=>post.id)
+    @ManyToOne(()=> Post, (post)=>post.postId)
     @JoinColumn({name: 'postId'})
-    post: Post
-
-    @Column()
-    postId: string;
+    postId: Post
 
     @ManyToOne(()=>Comment, {nullable: true})
-    @JoinColumn({name: 'parentCommentId'})
+    @JoinColumn({name: 'parentCommentId', referencedColumnName: 'id'})
     parentCommentId: string
 
 

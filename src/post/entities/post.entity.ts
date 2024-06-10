@@ -5,20 +5,20 @@ import { Comment } from "src/comment/entities/comment.entity";
 
 @Entity({name : 'TB_POST'})
 export class Post {
-    @PrimaryGeneratedColumn({name: 'id'})
-    id: string;
+    @PrimaryGeneratedColumn({name: 'postId'})
+    postId: string;
 
-    @Column({name: 'title'})
+    @Column({name: 'title', nullable: false})
     title: string;
 
-    @ManyToOne(()=> User, (user)=>user.posts)
-    @JoinColumn({name: 'userId'})
+    @ManyToOne(()=> User, (user)=>user.posts, {nullable: false})
+    @JoinColumn({name: 'userId', referencedColumnName: 'userId'})
     author: User;
 
-    @Column({name: 'content'})
+    @Column({name: 'content', nullable: false})
     content: string;
 
-    @Column({name: 'category'})
+    @Column({name: 'category', nullable: false})
     category: string
     
     @Column({name: 'views', default: 0})

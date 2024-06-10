@@ -9,8 +9,8 @@ export class ImageUrl {
     @Column({name: 'url'})
     url: string;
 
-    @ManyToOne(()=> Post, (post)=>post.id)
+    @ManyToOne(()=> Post, (post)=>post.postId)
     @JoinColumn({name: 'postId'})
-    post: string;
+    postId: string;
 
 }

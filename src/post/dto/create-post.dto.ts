@@ -5,9 +5,6 @@ export class CreatePostDto {
     readonly title: string
 
     @IsString()
-    readonly userId: string
-
-    @IsString()
     readonly content: string
 
     @IsString()

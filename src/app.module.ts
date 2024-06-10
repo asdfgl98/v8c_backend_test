@@ -26,8 +26,8 @@ import { Comment } from './comment/entities/comment.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: false,
-      entities: [User, Post, ImageUrl, Comment]
-
+      entities: [User, Post, ImageUrl, Comment],
+      timezone: 'Asia/Seoul'
     }),
     UsersModule,
     PostModule,
