@@ -52,11 +52,11 @@ export class PostService {
     
   }
 
-  async remove(postId: string, userId: string){
+  async softDelete(postId: string, userId: string){
     await this.postAuthorCheck(postId, userId)
 
     try{
-      const removePost = await this.postRepository.delete(
+      const removePost = await this.postRepository.softDelete(
         {postId}
       )
 

@@ -33,7 +33,7 @@ export class PostController {
     @Param() {postId},
     @Request() req:any
   ) {
-    return this.postService.remove(postId, req.user.sub)
+    return this.postService.softDelete(postId, req.user.sub)
   }
 
   @Get()

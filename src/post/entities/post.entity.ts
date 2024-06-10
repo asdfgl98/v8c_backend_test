@@ -1,5 +1,5 @@
 import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ImageUrl } from "./imageUrl.entity";
 import { Comment } from "src/comment/entities/comment.entity";
 
@@ -29,6 +29,9 @@ export class Post {
 
     @UpdateDateColumn({name : 'updatedAt'})
     updatedAt: Date;
+
+    @DeleteDateColumn({name: 'deletedAt'})
+    deletedAt: Date;
 
     @OneToMany(()=> ImageUrl, (img)=>img.url)
     imageUrl: ImageUrl[]
