@@ -13,19 +13,19 @@ export class BearerTokenGuard implements CanActivate {
         if(!rawToken){
             throw new UnauthorizedException("Bearer 토큰이 존재하지 않습니다.")
         }
-
         const token = this.authService.extractTokenFromHeader(rawToken, true)
 
-        const verify = this.authService.verifyToken(token, false)
+        const verify = this.authService.verifyToken(token)
 
         req.user = verify
+        req.token = token
 
         return true
     }
 }
 
 @Injectable()
-export class AccessTokenGuard extends BearerTokenGuard {
+export class AccessTokenGuard extends BearerTokenGuard {    
     async canActivate(context: ExecutionContext): Promise<boolean> {
         await super.canActivate(context)
 
@@ -47,7 +47,7 @@ export class RefreshTokenGuard extends BearerTokenGuard {
 
         if(req.user.type !== 'refresh'){
             throw new UnauthorizedException("refresh 토큰이 아닙니다.")
-        }
+        }       
 
         return true
     }

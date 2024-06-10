@@ -26,7 +26,7 @@ export class AuthController {
 
   @Post('refresh')
   @UseGuards(RefreshTokenGuard)
-  async refresh(@Body() req:any){
+  async refresh(@Request() req:any){
     const result = await this.authService.refreshAccessToken(req.token, false)
 
     return result
@@ -34,7 +34,7 @@ export class AuthController {
 
   @Post('test')
   @UseGuards(AccessTokenGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('user')
   async test(@Request() req:any){
     console.log(req.user)
   }

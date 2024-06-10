@@ -54,7 +54,7 @@ export class AuthService {
         }
     }
 
-    verifyToken(token: string, isRefreshToken: boolean){
+    verifyToken(token: string){
         try{
             const payload = this.jwtService.verify(token, {
                 secret: this.configService.get('JWT_SECRET')
@@ -62,10 +62,7 @@ export class AuthService {
             return payload
         } catch(err){
             if(err.message === "jwt expired"){
-                if(isRefreshToken){
-                    throw new BadRequestException('리프레시 토큰이 만료되었습니다.')
-                }
-                throw new BadRequestException('엑세스 토큰이 만료되었습니다.')
+                throw new BadRequestException('토큰이 만료되었습니다.')
             }
 
             console.error('토큰 검증 에러', err)
@@ -84,13 +81,13 @@ export class AuthService {
     }
 
     async refreshAccessToken(token: string, isRefreshToken: boolean){
-        const verify = await this.verifyToken(token, isRefreshToken)
+        const verify = await this.verifyToken(token)
         if(verify.type !== 'refresh'){
             throw new BadRequestException('토큰 재발급은 Refresh Token으로만 가능합니다.')
         }
 
         return this.generationToken(
-            verify.id,
+            verify.sub,
             isRefreshToken
         )
         
