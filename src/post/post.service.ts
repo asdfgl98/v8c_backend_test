@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UsersService } from 'src/users/users.service';
+import { ImageUrl } from './entities/imageUrl.entity';
 
 
 @Injectable()
@@ -13,17 +14,26 @@ export class PostService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+    @InjectRepository(ImageUrl)
+    private imageUrlRepository: Repository<ImageUrl>
   ){}
 
-  async create(createPostDto: CreatePostDto, userId: User): Promise<boolean> {
+  async create(createPostDto: CreatePostDto, userId: User, imageUrl: string | null): Promise<Post> {
     const post = this.postRepository.create({
       ...createPostDto,
       author: userId,
     })
 
-    try{
-      await this.postRepository.save(post)
-      return true;
+    if(imageUrl){
+      const image = this.imageUrlRepository.create({
+        url: imageUrl
+      })
+  
+      post.imageUrl = [image]
+    }
+
+    try{      
+      return await this.postRepository.save(post);
 
     } catch(err){
       console.error('게시물 생성 오류 발생', err)
@@ -64,10 +74,7 @@ export class PostService {
 
     } catch(err){
       throw new BadRequestException("게시물 삭제 중 오류가 발생했습니다.")
-    }
-
-
-    
+    }   
     
   }
 
@@ -91,7 +98,7 @@ export class PostService {
   }
 
   async select(): Promise<Post[]>{
-    return await this.postRepository.find()
+    return await this.postRepository.find({relations: ['imageUrl']})
   }
 
   

@@ -17,10 +17,12 @@ export class AwsService {
         })        
     }
 
-    async uploadImage(file: Express.Multer.File){   
+    async uploadImage(file?: Express.Multer.File){
+        if(!file){
+            return;
+        }
         const bucketName = this.configService.get("AWS_BUCKET_NAME")
         const fileName = `${uuid()}-${file.originalname}`
-        console.log(file)
         const uploadData = {
             Bucket: bucketName,
             Key: fileName,

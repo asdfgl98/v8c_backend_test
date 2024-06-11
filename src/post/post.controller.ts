@@ -10,20 +10,20 @@ import { AwsService } from 'src/aws/aws.service';
 export class PostController {
   constructor(
     private readonly postService: PostService,
-    private readonly awsService: AwsService
+    private readonly awsService: AwsService,
   ) {}
 
   @Post()
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(FileInterceptor('image'))
-  create(
+  async create(
     @Body() createPostDto: CreatePostDto,
     @Request() req: any,
     @UploadedFile() file?: Express.Multer.File
   ) {
-    // console.log(file)
-    this.awsService.uploadImage(file)
-    // return this.postService.create(createPostDto, req.user.sub);
+    const imageUrl = await this.awsService.uploadImage(file)
+    return await this.postService.create(createPostDto, req.user.sub, imageUrl);
+
   }
 
   @Patch(':postId')

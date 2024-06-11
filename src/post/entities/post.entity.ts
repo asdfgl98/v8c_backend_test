@@ -33,7 +33,7 @@ export class Post {
     @DeleteDateColumn({name: 'deletedAt'})
     deletedAt: Date;
 
-    @OneToMany(()=> ImageUrl, (img)=>img.url)
+    @OneToMany(()=> ImageUrl, (img)=>img.postId, {cascade: true})
     imageUrl: ImageUrl[]
 
     @OneToMany(()=> Comment, (comment)=> comment.comment)
