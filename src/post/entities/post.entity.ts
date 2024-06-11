@@ -11,7 +11,7 @@ export class Post {
     @Column({name: 'title', nullable: false})
     title: string;
 
-    @ManyToOne(()=> User, (user)=>user.posts, {nullable: false})
+    @ManyToOne(()=> User, (user)=>user.posts, {nullable: false, onDelete: 'CASCADE'})
     @JoinColumn({name: 'userId', referencedColumnName: 'userId'})
     author: User;
 

@@ -63,12 +63,10 @@ export class PostService {
   }
 
   async softDelete(postId: string, userId: string){
-    await this.postAuthorCheck(postId, userId)
+    const post = await this.postAuthorCheck(postId, userId)
 
     try{
-      const removePost = await this.postRepository.softDelete(
-        {postId}
-      )
+      const removePost = await this.postRepository.softRemove(post)
 
       return true
 
@@ -83,7 +81,7 @@ export class PostService {
       where: {
         postId
       },
-      relations: ['author']
+      relations: ['author', 'imageUrl']
     })
 
     if(!findPost){
@@ -94,7 +92,7 @@ export class PostService {
       throw new UnauthorizedException("작성자만 게시물을 수정 및 삭제 할 수 있습니다.")
     }
 
-    return true
+    return findPost
   }
 
   async select(): Promise<Post[]>{

@@ -1,5 +1,5 @@
 import { Post } from "src/post/entities/post.entity";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity({name : 'TB_USER'})
 export class User {
@@ -15,9 +15,12 @@ export class User {
     @CreateDateColumn({ name: 'createdAt'})
     createdAt: Date
 
+    @DeleteDateColumn()
+    deletedAt: Date
+
     @Column({ name: 'role', default: 'user'})
     role: string
 
-    @OneToMany(()=> Post, (post)=> post.author)
+    @OneToMany(()=> Post, (post)=> post.author, {cascade: true})
     posts: Post[]
 }
