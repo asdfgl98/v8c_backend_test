@@ -17,7 +17,7 @@ import { AwsModule } from './aws/aws.module';
   imports: [AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './config/.env'
+      envFilePath: `./config/.env.${process.env.NODE_ENV}`
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

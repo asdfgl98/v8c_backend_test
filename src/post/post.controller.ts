@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { AccessTokenGuard } from 'src/guard/bearer-token.guard';
@@ -46,8 +46,11 @@ export class PostController {
   }
 
   @Get()
-  select(){
-    return this.postService.select()
+  select(
+    @Query('orderBy') orderBy: string,
+    @Query('filter') filter: string
+){
+    return this.postService.select(orderBy, filter)
   }
   
 

@@ -2,11 +2,12 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { CreatePostDto } from './dto/create-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { Repository } from 'typeorm';
+import { Between, FindOptionsOrderValue, Repository } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UsersService } from 'src/users/users.service';
 import { ImageUrl } from './entities/imageUrl.entity';
+import { filterWithDate, nowTime } from 'src/common/util';
 
 
 @Injectable()
@@ -95,8 +96,26 @@ export class PostService {
     return findPost
   }
 
-  async select(): Promise<Post[]>{
-    return await this.postRepository.find({relations: ['imageUrl']})
+  async select(orderBy?: string, filter?: string): Promise<Post[]>{
+    if(orderBy === 'views'){
+      const nowDate = nowTime(new Date())
+      const filterDate = filterWithDate(filter)
+      console.log(nowDate, filterDate)
+
+      return await this.postRepository.find({
+        relations: ['imageUrl'],
+        where: {
+          createdAt: Between(filterDate, nowDate)
+        },
+        order: { views: orderBy as FindOptionsOrderValue}
+      })
+    }
+    
+    
+    return await this.postRepository.find({
+      relations: ['imageUrl'],
+      order: { createdAt: orderBy as FindOptionsOrderValue}
+    })
   }
 
   

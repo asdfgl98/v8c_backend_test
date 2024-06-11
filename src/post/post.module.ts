@@ -8,9 +8,6 @@ import { ImageUrl } from './entities/imageUrl.entity';
 import { UsersModule } from 'src/users/users.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { extname } from 'path';
-import * as multer from 'multer';
-import { POST_IMAGE_PATH } from 'src/common/const/path.const';
-import {v4 as uuid} from 'uuid'
 import { AwsModule } from 'src/aws/aws.module';
 
 @Module({
