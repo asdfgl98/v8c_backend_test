@@ -11,6 +11,7 @@ import { Post } from './post/entities/post.entity';
 import { ImageUrl } from './post/entities/imageUrl.entity';
 import { CommentModule } from './comment/comment.module';
 import { Comment } from './comment/entities/comment.entity';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [AuthModule,
@@ -31,7 +32,8 @@ import { Comment } from './comment/entities/comment.entity';
     }),
     UsersModule,
     PostModule,
-    CommentModule
+    CommentModule,
+    AwsModule
   ],
   controllers: [AppController],
   providers: [AppService],
