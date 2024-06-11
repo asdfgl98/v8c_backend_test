@@ -11,12 +11,14 @@ import { extname } from 'path';
 import * as multer from 'multer';
 import { POST_IMAGE_PATH } from 'src/common/const/path.const';
 import {v4 as uuid} from 'uuid'
+import { AwsModule } from 'src/aws/aws.module';
 
 @Module({
   imports:[
     AuthModule,
     UsersModule,
     TypeOrmModule.forFeature([Post, ImageUrl]),
+    AwsModule,
     MulterModule.register({
       limits:{
         fileSize: 10000000
@@ -32,15 +34,7 @@ import {v4 as uuid} from 'uuid'
         }
         
         return cb(null, true)
-      },
-      storage: multer.diskStorage({
-        destination: function(req, res, cb){
-          cb(null, POST_IMAGE_PATH)
-        },
-        filename: function(req, file, cb){
-          cb(null, `${uuid()}${extname(file.originalname)}`)
-        }
-      })
+      }
     })
   ],
   controllers: [PostController],

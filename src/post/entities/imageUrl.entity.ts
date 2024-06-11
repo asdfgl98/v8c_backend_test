@@ -11,6 +11,6 @@ export class ImageUrl {
 
     @ManyToOne(()=> Post, (post)=>post.postId)
     @JoinColumn({name: 'postId'})
-    postId: string;
+    postId: Post;
 
 }
