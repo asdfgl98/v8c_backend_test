@@ -1,0 +1,5 @@
+data-source.ts
+.dockerignoer
+Dockerfile.*
+node_modules
+dist
