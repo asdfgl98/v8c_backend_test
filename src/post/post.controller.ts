@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFile, UploadedFiles, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { AccessTokenGuard } from 'src/guard/bearer-token.guard';
+import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard'; 
 import { UpdatePostDto } from './dto/update-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
