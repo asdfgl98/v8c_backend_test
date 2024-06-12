@@ -22,7 +22,7 @@ export class PostController {
     @UploadedFile() file?: Express.Multer.File
   ) {
     const imageUrl = await this.awsService.uploadImage(file)
-    return await this.postService.create(createPostDto, req.user.sub, imageUrl);
+    return await this.postService.create(createPostDto, req.user.sub, req.user.sub, imageUrl);
 
   }
 

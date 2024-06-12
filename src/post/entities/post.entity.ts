@@ -15,6 +15,9 @@ export class Post {
     @JoinColumn({name: 'userId', referencedColumnName: 'userId'})
     author: User;
 
+    @Column()
+    userId: string
+
     @Column({name: 'content', nullable: false})
     content: string;
 

@@ -19,10 +19,11 @@ export class PostService {
     private imageUrlRepository: Repository<ImageUrl>
   ){}
 
-  async create(createPostDto: CreatePostDto, userId: User, imageUrl: string | null): Promise<Post> {
+  async create(createPostDto: CreatePostDto, user: User, userId: string, imageUrl: string | null): Promise<Post> {
     const post = this.postRepository.create({
       ...createPostDto,
-      author: userId,
+      author: user,
+      userId
     })
 
     if(imageUrl){
@@ -108,8 +109,7 @@ export class PostService {
         },
         order: { views: orderBy as FindOptionsOrderValue}
       })
-    }
-    
+    }    
     
     return await this.postRepository.find({
       relations: ['imageUrl'],
@@ -119,14 +119,19 @@ export class PostService {
 
   async search(searchValue: string, type?: string){
     const queryBuilder = this.postRepository.createQueryBuilder('post')
-    if(type === 'title'){
-      
-      queryBuilder.where('post.title LIKE :searchValue', {searchValue: `%${searchValue}%`})
-    } else if(type ==='userId'){
-      queryBuilder.where('post.userId = :searchValue', {searchValue})
-    }
+    try{
+      if(type === 'title'){      
+        queryBuilder.where('post.title LIKE :searchValue', {searchValue: `%${searchValue}%`})
+      } else if(type ==='userId'){
+        queryBuilder.where('post.userId = :searchValue', {searchValue})
+      }
 
-    return await queryBuilder.getMany()
+      return await queryBuilder.getMany()
+
+    } catch(err){
+      console.error('게시물 검색 쿼리 오류 발생')
+      throw new BadRequestException('게시물 검색 쿼리 실행 중 오류가 발생했습니다.')
+    }
 
   }
 
