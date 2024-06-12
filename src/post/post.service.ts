@@ -16,10 +16,20 @@ export class PostService {
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
     @InjectRepository(ImageUrl)
-    private imageUrlRepository: Repository<ImageUrl>
+    private imageUrlRepository: Repository<ImageUrl>,
+    private readonly userService: UsersService
   ){}
 
   async create(createPostDto: CreatePostDto, user: User, userId: string, imageUrl: string | null): Promise<Post> {
+    const find = await this.userService.findOne(userId)
+    if(!find){
+      throw new UnauthorizedException("존재하지 않는 회원입니다.")
+    }
+
+    if(createPostDto.category === '공지사항' && find.role !== 'admin'){
+      throw new UnauthorizedException("공지사항 작성은 admin 권한이 필요합니다.")
+    }
+
     const post = this.postRepository.create({
       ...createPostDto,
       author: user,

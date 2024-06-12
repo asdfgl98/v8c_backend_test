@@ -2,8 +2,7 @@ import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } 
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AccessTokenGuard, BearerTokenGuard, RefreshTokenGuard } from './guard/bearer-token.guard'
-import { Roles } from 'src/users/decorator/roles.decorator';
-import { RolesGuard } from 'src/users/guard/roles.guard';
+
 
 @Controller('auth')
 export class AuthController {
@@ -32,10 +31,4 @@ export class AuthController {
     return result
   }
 
-  @Post('test')
-  @UseGuards(AccessTokenGuard, RolesGuard)
-  @Roles('user')
-  async test(@Request() req:any){
-    console.log(req.user)
-  }
 }
