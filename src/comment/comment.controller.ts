@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @UseGuards(AccessTokenGuard)
+  create(
+    @Body() createCommentDto: CreateCommentDto,
+    @Request() req: any
+  ) {
+    return this.commentService.create(createCommentDto, req.user.sub);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Get(':postId')
+  find(@Param('postId') postId: string) {
+    return this.commentService.find(postId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  @Patch(':commentId')
+  @UseGuards(AccessTokenGuard)
+  update(
+    @Param('commentId') commentId: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @Request() req: any
+  ) {
+    return this.commentService.update(+commentId, updateCommentDto, req.user.sub);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  @Delete(':commentId')
+  @UseGuards(AccessTokenGuard)
+  remove(
+    @Param('commentId') commentId: string,
+    @Request() req: any
+  ) {
+    return this.commentService.softDelete(+commentId, req.user.sub);
   }
 }

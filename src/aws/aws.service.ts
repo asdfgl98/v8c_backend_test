@@ -17,6 +17,7 @@ export class AwsService {
         })        
     }
 
+    /** S3 이미지 업로드 */
     async uploadImage(file?: Express.Multer.File){
         if(!file){
             return;

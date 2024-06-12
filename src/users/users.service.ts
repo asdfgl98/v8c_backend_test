@@ -15,10 +15,12 @@ export class UsersService {
     private usersRepository: Repository<User>
   ){}
 
+  /** 유저 유무 확인 */
   async findOne(userId: string){
     return await this.usersRepository.findOne({where: {userId}})
   }
 
+  /** 유저 회원가입 CREATE */
   async join(user: CreateUserDto) {
     const duplicateCheck = await this.findOne(user.userId)
     if(duplicateCheck){

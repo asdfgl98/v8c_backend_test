@@ -20,6 +20,7 @@ export class PostService {
     private readonly userService: UsersService
   ){}
 
+  /** 게시물 CREATE */
   async create(createPostDto: CreatePostDto, user: User, userId: string, imageUrl: string | null): Promise<Post> {
     const find = await this.userService.findOne(userId)
     if(!find){
@@ -53,8 +54,9 @@ export class PostService {
     }
   }
 
+  /** 게시물 UPDATE */
   async update(updatePostDto: UpdatePostDto, postId: string, userId: string): Promise<boolean>{
-    await this.postAuthorCheck(postId, userId)
+    await this.postAuthCheck(postId, userId)
 
     try{
       const update = await this.postRepository.update(
@@ -74,21 +76,20 @@ export class PostService {
     
   }
 
+  /** 게시물 SOFT DELETE */
   async softDelete(postId: string, userId: string){
-    const post = await this.postAuthorCheck(postId, userId)
+    const post = await this.postAuthCheck(postId, userId)
 
     try{
-      const removePost = await this.postRepository.softRemove(post)
-
-      return true
-
+      return await this.postRepository.softRemove(post)
     } catch(err){
       throw new BadRequestException("게시물 삭제 중 오류가 발생했습니다.")
     }   
     
   }
 
-  async postAuthorCheck(postId: string, userId: string){
+  /** 게시물 수정 및 삭제 권한 검증 */
+  async postAuthCheck(postId: string, userId: string){
     const findPost = await this.postRepository.findOne({
       where: {
         postId
@@ -101,12 +102,13 @@ export class PostService {
     }
 
     if(findPost.author.userId !== userId){
-      throw new UnauthorizedException("작성자만 게시물을 수정 및 삭제 할 수 있습니다.")
+      throw new UnauthorizedException("작성자만 게시물을 수정 및 삭제할 수 있습니다.")
     }
 
     return findPost
   }
 
+  /** 게시물 SELECT */
   async select(orderBy: string = 'DESC', filter?: string): Promise<Post[]>{
     if(filter){
       const nowDate = nowTime(new Date())
@@ -127,6 +129,7 @@ export class PostService {
     })
   }
 
+  /** 게시물 SEARCH */
   async search(searchValue: string, type?: string){
     const queryBuilder = this.postRepository.createQueryBuilder('post')
     try{
@@ -143,6 +146,10 @@ export class PostService {
       throw new BadRequestException('게시물 검색 쿼리 실행 중 오류가 발생했습니다.')
     }
 
+  }
+
+  async findPost(postId: string){
+    return await this.postRepository.findOne({ where : {postId}})
   }
 
   

@@ -36,5 +36,6 @@ import { AwsModule } from 'src/aws/aws.module';
   ],
   controllers: [PostController],
   providers: [PostService],
+  exports: [PostService]
 })
 export class PostModule {}

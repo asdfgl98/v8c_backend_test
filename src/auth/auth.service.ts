@@ -17,12 +17,14 @@ export class AuthService {
         @InjectRepository(User) private usersRepository: Repository<User>
     ){}
 
+    /** 유저 회원가입 후 로그인 처리 */
     async join(userData: CreateUserDto){
         const joinResult = await this.usersService.join(userData)
         
         return this.userLogin(joinResult.userId)
     }
 
+    /** 로그인 시도 시 ID / PASSWORD 검증 */
     async validateUser(userId: string, password: string){
         const user = await this.usersService.findOne(userId)
 
@@ -34,6 +36,7 @@ export class AuthService {
         return false
     }
 
+    /** JWT 생성 */
     generationToken(user: any, isRefreshToken: boolean){
         const payload = {
             sub : user.userId,
@@ -47,6 +50,7 @@ export class AuthService {
         })
     }
 
+    /** JWT 반환 */
     userLogin(user: any){
         return {
             accessToken : this.generationToken(user, false),
@@ -54,6 +58,7 @@ export class AuthService {
         }
     }
 
+    /** JWT 검증 */
     verifyToken(token: string){
         try{
             const payload = this.jwtService.verify(token, {
@@ -70,6 +75,7 @@ export class AuthService {
         }
     }
 
+    /** 헤더에서 TOKEN 추출 */
     extractTokenFromHeader(header: string, isBearer: boolean){
         const splitToken = header.split(" ")
         const prefix = isBearer ? 'Bearer' : 'Basic'
@@ -80,6 +86,7 @@ export class AuthService {
         return splitToken[1]
     }
 
+    /** 토큰 재발급 */
     async refreshAccessToken(token: string, isRefreshToken: boolean){
         const verify = await this.verifyToken(token)
         if(verify.type !== 'refresh'){
