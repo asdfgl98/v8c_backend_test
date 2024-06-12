@@ -100,7 +100,6 @@ export class PostService {
     if(filter){
       const nowDate = nowTime(new Date())
       const filterDate = filterWithDate(filter)
-      console.log(nowDate, filterDate)
 
       return await this.postRepository.find({
         relations: ['imageUrl'],
@@ -116,6 +115,19 @@ export class PostService {
       relations: ['imageUrl'],
       order: { createdAt: orderBy as FindOptionsOrderValue}
     })
+  }
+
+  async search(searchValue: string, type?: string){
+    const queryBuilder = this.postRepository.createQueryBuilder('post')
+    if(type === 'title'){
+      
+      queryBuilder.where('post.title LIKE :searchValue', {searchValue: `%${searchValue}%`})
+    } else if(type ==='userId'){
+      queryBuilder.where('post.userId = :searchValue', {searchValue})
+    }
+
+    return await queryBuilder.getMany()
+
   }
 
   

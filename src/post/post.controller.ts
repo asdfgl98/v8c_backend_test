@@ -49,9 +49,18 @@ export class PostController {
   select(
     @Query('orderBy') orderBy: string,
     @Query('filter') filter: string
-){
+  ) {
     return this.postService.select(orderBy, filter)
   }
+
+  @Get('/search')
+  search(
+    @Query('searchValue') searchValue: string,
+    @Query('type') type: string
+  ){
+    return this.postService.search(searchValue, type)
+  }
+
   
 
 
