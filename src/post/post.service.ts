@@ -96,8 +96,8 @@ export class PostService {
     return findPost
   }
 
-  async select(orderBy?: string, filter?: string): Promise<Post[]>{
-    if(orderBy === 'views'){
+  async select(orderBy: string = 'DESC', filter?: string): Promise<Post[]>{
+    if(filter){
       const nowDate = nowTime(new Date())
       const filterDate = filterWithDate(filter)
       console.log(nowDate, filterDate)
