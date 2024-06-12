@@ -1,5 +1,5 @@
 data-source.ts
 .dockerignoer
-Dockerfile.*
+Dockerfile
 node_modules
 dist
