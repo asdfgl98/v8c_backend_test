@@ -68,7 +68,8 @@ export class PostService {
         throw new BadRequestException("게시물 업데이트가 적용되지 않았습니다.")
       }
         
-        return true
+      return true
+      
     } catch(err){
       throw new BadRequestException("게시물 업데이트 중 에러가 발생했습니다.")
     }
