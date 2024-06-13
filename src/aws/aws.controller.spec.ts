@@ -4,11 +4,12 @@ import { AwsService } from './aws.service';
 
 describe('AwsController', () => {
   let controller: AwsController;
+  let service: AwsService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AwsController],
-      providers: [AwsService],
+      providers: [],
     }).compile();
 
     controller = module.get<AwsController>(AwsController);

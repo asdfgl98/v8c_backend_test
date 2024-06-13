@@ -52,6 +52,8 @@ describe('AuthService', () => {
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
     configService = module.get<ConfigService>(ConfigService);
+
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it('should be defined', () => {

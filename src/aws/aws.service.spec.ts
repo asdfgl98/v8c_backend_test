@@ -42,6 +42,8 @@ describe('AwsService', () => {
     service = module.get<AwsService>(AwsService);
     s3 = new AWS.S3();
     service['s3'] = s3;  
+
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it('should be defined', () => {
