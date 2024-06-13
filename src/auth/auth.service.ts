@@ -14,14 +14,13 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
         private readonly usersService: UsersService,
-        @InjectRepository(User) private usersRepository: Repository<User>
     ){}
 
     /** 유저 회원가입 후 로그인 처리 */
     async join(userData: CreateUserDto){
         const joinResult = await this.usersService.join(userData)
         
-        return this.userLogin(joinResult.userId)
+        return this.userLogin(joinResult)
     }
 
     /** 로그인 시도 시 ID / PASSWORD 검증 */
