@@ -92,7 +92,8 @@ export class CommentService {
     const findComment = await this.commentAuthCheck(commentId, userId)
 
     try{
-      return await this.commentRepository.softRemove(findComment)
+      await this.commentRepository.softRemove(findComment)
+      return true
     } catch(err){
       throw new BadRequestException("댓글 삭제 중 오류가 발생했습니다.")
     }
