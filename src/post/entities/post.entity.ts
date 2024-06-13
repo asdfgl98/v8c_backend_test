@@ -8,7 +8,7 @@ export class Post {
     @PrimaryGeneratedColumn({name: 'postId'})
     postId: string;
 
-    @Column({name: 'title', nullable: false})
+    @Column({name: 'title', nullable: false})    
     title: string;
 
     @ManyToOne(()=> User, (user)=>user.posts, {nullable: false, onDelete: 'CASCADE'})
@@ -18,13 +18,13 @@ export class Post {
     @Column()
     userId: string
 
-    @Column({name: 'content', nullable: false})
+    @Column({name: 'content', nullable: false})    
     content: string;
 
     @Column({name: 'category', nullable: false})
     category: string
     
-    @Column({name: 'views', default: 0})
+    @Column({name: 'views', default: 0})    
     views: number;
 
     @CreateDateColumn({name: 'createdAt'})

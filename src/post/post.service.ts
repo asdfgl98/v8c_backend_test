@@ -69,7 +69,7 @@ export class PostService {
       }
         
       return true
-      
+
     } catch(err){
       throw new BadRequestException("게시물 업데이트 중 에러가 발생했습니다.")
     }
@@ -138,6 +138,10 @@ export class PostService {
         queryBuilder.where('post.title LIKE :searchValue', {searchValue: `%${searchValue}%`})
       } else if(type ==='userId'){
         queryBuilder.where('post.userId = :searchValue', {searchValue})
+      } else {
+        queryBuilder
+        .where('post.userId = :searchValue OR post.title LIKE :searchTitle', 
+          { searchValue, searchTitle: `%${searchValue}%` });
       }
 
       return await queryBuilder.getMany()

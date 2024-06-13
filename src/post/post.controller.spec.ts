@@ -79,7 +79,7 @@ describe('PostController', () => {
 
   describe('update', () => {
     it('게시물 업데이트 controller 테스트', async () => {
-      const updatePostDto: UpdatePostDto = { title: 'Updated Post' };
+      const updatePostDto: UpdatePostDto = { content: 'Updated Post' };
       const req = { user: { sub: 'asdfgl98' } };
       const postId = '1';
 
